@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>debug-mobile</title>
+    <style>
+      body { margin: 0; font: 12px monospace; }
+      .wrap { display: flex; gap: 8px; padding: 4px; }
+      iframe { border: 1px solid #999; height: 2400px; }
+      #dbg {
+        position: fixed; left: 0; bottom: 0; z-index: 99; background: #fff;
+        color: #000; padding: 6px; margin: 0; max-width: 100%; white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <iframe id="f390" src="index.html" style="width: 390px"></iframe>
+      <iframe id="f320" src="index.html" style="width: 320px"></iframe>
+    </div>
+    <pre id="dbg">loading…</pre>
+    <script>
+      function scan(win) {
+        var W = win.document.documentElement.clientWidth;
+        var out = ["VW=" + W + " SCROLLW=" + win.document.documentElement.scrollWidth];
+        win.document.querySelectorAll("body *").forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          var st = win.getComputedStyle(el);
+          if (st.position === "fixed") return;
+          if (r.right > W + 1) {
+            out.push(
+              (el.tagName + "." + (el.className || "?")).substring(0, 40) +
+                "[R" + Math.round(r.right) + " W" + Math.round(r.width) + "]"
+            );
+          }
+        });
+        return out.slice(0, 14).join("\n");
+      }
+      setTimeout(function () {
+        var txt = [];
+        ["f390", "f320"].forEach(function (id) {
+          try { txt.push("== " + id + " ==\n" + scan(document.getElementById(id).contentWindow)); }
+          catch (e) { txt.push("== " + id + " == " + e.message); }
+        });
+        document.getElementById("dbg").textContent = txt.join("\n");
+      }, 6000);
+    </script>
+  </body>
+</html>

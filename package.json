@@ -1,0 +1,12 @@
+{
+  "name": "laslesvpn-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LaslesVPN landing page — React, no build step, no backend.",
+  "scripts": {
+    "start": "npx --yes serve . -l 8123",
+    "serve:python": "python -m http.server 8123 --bind 127.0.0.1"
+  },
+  "keywords": ["react", "landing-page", "vpn", "no-build"],
+  "license": "MIT"
+}
